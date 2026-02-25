@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Candy Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>🍬 HTML Candy Builder</h1>
+      <p>Drag blocks, build layouts, and learn HTML with instant explanations + preview.</p>
+    </header>
+
+    <main class="workspace">
+      <section class="panel palette-panel">
+        <div class="panel-title-wrap">
+          <h2>✨ HTML Blocks</h2>
+          <span class="chip">Drag me!</span>
+        </div>
+        <p class="panel-help">Pick from common HTML elements and drop onto the canvas.</p>
+        <div id="palette" class="palette-grid"></div>
+
+        <div class="explanation-box" id="explanationBox">
+          <h3>Element Explorer</h3>
+          <p>Hover a block to learn what it does.</p>
+        </div>
+      </section>
+
+      <section class="panel canvas-panel">
+        <div class="panel-title-wrap">
+          <h2>🧩 Build Canvas</h2>
+          <button id="clearCanvas" class="ghost-btn">Clear all</button>
+        </div>
+        <p class="panel-help">Drop elements here. Drag cards to reorder. Use ✕ to delete.</p>
+        <div id="dropZone" class="drop-zone" aria-label="Drop zone"></div>
+      </section>
+
+      <section class="panel output-panel">
+        <div class="panel-title-wrap">
+          <h2>💡 Code + Preview</h2>
+          <button id="copyCode" class="primary-btn">Copy HTML</button>
+        </div>
+        <div class="output-grid">
+          <article class="code-card">
+            <h3>Auto-generated HTML</h3>
+            <pre id="codeOutput" class="code-output" aria-live="polite"></pre>
+          </article>
+
+          <article class="preview-card">
+            <h3>Live Preview</h3>
+            <iframe id="previewFrame" title="Live HTML preview"></iframe>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
