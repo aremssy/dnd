@@ -15,21 +15,27 @@
   <body>
     <header class="app-header">
       <h1>🍬 HTML Candy Builder</h1>
-      <p>Drag blocks, build layouts, and learn HTML with instant explanations + preview.</p>
+      <p>Drag layouts + HTML blocks, nest elements, and watch code and preview update instantly.</p>
     </header>
 
     <main class="workspace">
       <section class="panel palette-panel">
         <div class="panel-title-wrap">
-          <h2>✨ HTML Blocks</h2>
-          <span class="chip">Drag me!</span>
+          <h2>🏗️ Layout Blocks</h2>
+          <span class="chip">Start here!</span>
         </div>
-        <p class="panel-help">Pick from common HTML elements and drop onto the canvas.</p>
-        <div id="palette" class="palette-grid"></div>
+        <p class="panel-help">Drag one of 5 layout starters to the canvas.</p>
+        <div id="layoutPalette" class="palette-grid"></div>
+
+        <div class="panel-title-wrap subheading">
+          <h2>✨ HTML Elements</h2>
+        </div>
+        <p class="panel-help">Then drag elements into any glowing drop slot.</p>
+        <div id="elementPalette" class="palette-grid"></div>
 
         <div class="explanation-box" id="explanationBox">
           <h3>Element Explorer</h3>
-          <p>Hover a block to learn what it does.</p>
+          <p>Hover a block or canvas card to learn what it does.</p>
         </div>
       </section>
 
@@ -38,7 +44,7 @@
           <h2>🧩 Build Canvas</h2>
           <button id="clearCanvas" class="ghost-btn">Clear all</button>
         </div>
-        <p class="panel-help">Drop elements here. Drag cards to reorder. Use ✕ to delete.</p>
+        <p class="panel-help">Drop layout blocks, then nest elements inside layout spaces.</p>
         <div id="dropZone" class="drop-zone" aria-label="Drop zone"></div>
       </section>
 

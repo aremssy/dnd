@@ -1,63 +1,106 @@
 const ELEMENT_LIBRARY = [
-  { tag: "html", label: "<html>", category: "Structure", explanation: "Root element that wraps an entire HTML page." },
-  { tag: "head", label: "<head>", category: "Structure", explanation: "Contains metadata like title, links to CSS, and scripts." },
-  { tag: "body", label: "<body>", category: "Structure", explanation: "Holds all visible content shown to users." },
-  { tag: "header", label: "<header>", category: "Layout", explanation: "Top area for logo, title, or navigation." },
-  { tag: "nav", label: "<nav>", category: "Layout", explanation: "Groups navigation links for moving around pages." },
-  { tag: "main", label: "<main>", category: "Layout", explanation: "Main unique content of the page." },
-  { tag: "section", label: "<section>", category: "Layout", explanation: "A thematic grouping of related content." },
-  { tag: "article", label: "<article>", category: "Layout", explanation: "Independent content like blog posts or cards." },
-  { tag: "aside", label: "<aside>", category: "Layout", explanation: "Side content such as tips, ads, or links." },
-  { tag: "footer", label: "<footer>", category: "Layout", explanation: "Bottom area for credits, links, and copyright." },
-  { tag: "h1", label: "<h1>", category: "Text", explanation: "Largest heading; page or section title." },
-  { tag: "h2", label: "<h2>", category: "Text", explanation: "Second-level heading for major subsections." },
-  { tag: "h3", label: "<h3>", category: "Text", explanation: "Third-level heading for smaller section titles." },
-  { tag: "p", label: "<p>", category: "Text", explanation: "Paragraph text for writing explanations or stories." },
-  { tag: "span", label: "<span>", category: "Text", explanation: "Inline container for styling little parts of text." },
-  { tag: "strong", label: "<strong>", category: "Text", explanation: "Marks text as important (usually bold)." },
-  { tag: "em", label: "<em>", category: "Text", explanation: "Gives stress emphasis (usually italic)." },
-  { tag: "mark", label: "<mark>", category: "Text", explanation: "Highlights text with a marker effect." },
-  { tag: "small", label: "<small>", category: "Text", explanation: "Shows smaller print text or fine details." },
-  { tag: "blockquote", label: "<blockquote>", category: "Text", explanation: "For quoted sections from another source." },
-  { tag: "code", label: "<code>", category: "Text", explanation: "Displays computer code snippets." },
-  { tag: "pre", label: "<pre>", category: "Text", explanation: "Preserves spaces and line breaks in text." },
-  { tag: "a", label: "<a>", category: "Media + Links", explanation: "Creates clickable links to pages or websites." },
-  { tag: "img", label: "<img>", category: "Media + Links", explanation: "Displays images on the page." },
-  { tag: "figure", label: "<figure>", category: "Media + Links", explanation: "Wraps media with optional caption." },
-  { tag: "figcaption", label: "<figcaption>", category: "Media + Links", explanation: "Caption text for a figure." },
-  { tag: "video", label: "<video>", category: "Media + Links", explanation: "Embeds video playback." },
-  { tag: "audio", label: "<audio>", category: "Media + Links", explanation: "Embeds audio controls and playback." },
-  { tag: "ul", label: "<ul>", category: "Lists", explanation: "Bulleted (unordered) list." },
-  { tag: "ol", label: "<ol>", category: "Lists", explanation: "Numbered (ordered) list." },
-  { tag: "li", label: "<li>", category: "Lists", explanation: "One item inside ul or ol lists." },
-  { tag: "dl", label: "<dl>", category: "Lists", explanation: "Description list for terms and definitions." },
-  { tag: "dt", label: "<dt>", category: "Lists", explanation: "Term name in a description list." },
-  { tag: "dd", label: "<dd>", category: "Lists", explanation: "Definition details in a description list." },
-  { tag: "table", label: "<table>", category: "Tables", explanation: "Grid layout for tabular data." },
-  { tag: "thead", label: "<thead>", category: "Tables", explanation: "Header row group in a table." },
-  { tag: "tbody", label: "<tbody>", category: "Tables", explanation: "Main body rows in a table." },
-  { tag: "tr", label: "<tr>", category: "Tables", explanation: "A single table row." },
-  { tag: "th", label: "<th>", category: "Tables", explanation: "Header cell inside a table row." },
-  { tag: "td", label: "<td>", category: "Tables", explanation: "Data cell inside a table row." },
-  { tag: "form", label: "<form>", category: "Forms", explanation: "Container for user input fields." },
-  { tag: "label", label: "<label>", category: "Forms", explanation: "Names an input field for accessibility." },
-  { tag: "input", label: "<input>", category: "Forms", explanation: "Single-line field for typing info." },
-  { tag: "textarea", label: "<textarea>", category: "Forms", explanation: "Multi-line text input area." },
-  { tag: "select", label: "<select>", category: "Forms", explanation: "Dropdown list of options." },
-  { tag: "option", label: "<option>", category: "Forms", explanation: "One choice in a select dropdown." },
-  { tag: "button", label: "<button>", category: "Forms", explanation: "Clickable button for actions." },
-  { tag: "details", label: "<details>", category: "Interactive", explanation: "Expandable section users can open/close." },
-  { tag: "summary", label: "<summary>", category: "Interactive", explanation: "Visible title line for a details element." },
-  { tag: "progress", label: "<progress>", category: "Interactive", explanation: "Shows task progress visually." },
-  { tag: "meter", label: "<meter>", category: "Interactive", explanation: "Displays a value within a known range." },
-  { tag: "hr", label: "<hr>", category: "Other", explanation: "A horizontal divider between topics." },
-  { tag: "br", label: "<br>", category: "Other", explanation: "Adds a line break in text." },
-  { tag: "div", label: "<div>", category: "Other", explanation: "General-purpose block container." }
+  { tag: "div", label: "<div>", category: "Container", explanation: "General block container for grouping content." },
+  { tag: "header", label: "<header>", category: "Layout", explanation: "Top area for logo, heading, or nav." },
+  { tag: "nav", label: "<nav>", category: "Layout", explanation: "Container for navigation links." },
+  { tag: "main", label: "<main>", category: "Layout", explanation: "Main page content container." },
+  { tag: "section", label: "<section>", category: "Layout", explanation: "Groups related content by topic." },
+  { tag: "article", label: "<article>", category: "Layout", explanation: "Self-contained content block." },
+  { tag: "aside", label: "<aside>", category: "Layout", explanation: "Side info such as tips or callouts." },
+  { tag: "footer", label: "<footer>", category: "Layout", explanation: "Bottom area for footnotes and links." },
+  { tag: "h1", label: "<h1>", category: "Text", explanation: "Largest heading." },
+  { tag: "h2", label: "<h2>", category: "Text", explanation: "Second-level heading." },
+  { tag: "p", label: "<p>", category: "Text", explanation: "Paragraph for regular text." },
+  { tag: "span", label: "<span>", category: "Text", explanation: "Inline text wrapper." },
+  { tag: "strong", label: "<strong>", category: "Text", explanation: "Important text emphasis." },
+  { tag: "em", label: "<em>", category: "Text", explanation: "Stressed text emphasis." },
+  { tag: "ul", label: "<ul>", category: "Lists", explanation: "Bulleted list container." },
+  { tag: "ol", label: "<ol>", category: "Lists", explanation: "Numbered list container." },
+  { tag: "li", label: "<li>", category: "Lists", explanation: "List item." },
+  { tag: "a", label: "<a>", category: "Media + Links", explanation: "Clickable hyperlink." },
+  { tag: "img", label: "<img>", category: "Media + Links", explanation: "Embeds an image." },
+  { tag: "button", label: "<button>", category: "Forms", explanation: "Clickable action button." },
+  { tag: "form", label: "<form>", category: "Forms", explanation: "Wraps form fields." },
+  { tag: "label", label: "<label>", category: "Forms", explanation: "Describes an input field." },
+  { tag: "input", label: "<input>", category: "Forms", explanation: "Single-line text field." },
+  { tag: "table", label: "<table>", category: "Tables", explanation: "Container for table rows/cells." },
+  { tag: "thead", label: "<thead>", category: "Tables", explanation: "Table header rows." },
+  { tag: "tbody", label: "<tbody>", category: "Tables", explanation: "Table body rows." },
+  { tag: "tr", label: "<tr>", category: "Tables", explanation: "Table row." },
+  { tag: "th", label: "<th>", category: "Tables", explanation: "Header cell." },
+  { tag: "td", label: "<td>", category: "Tables", explanation: "Data cell." },
+  { tag: "hr", label: "<hr>", category: "Other", explanation: "Horizontal divider." },
+  { tag: "br", label: "<br>", category: "Other", explanation: "Line break." }
+];
+
+const LAYOUT_LIBRARY = [
+  {
+    id: "single-column",
+    name: "Single Column",
+    explanation: "A simple wrapper with one area for children.",
+    create: () => [node("div", { attrs: { class: "layout-single" }, text: "" })]
+  },
+  {
+    id: "hero-layout",
+    name: "Hero + Content + Footer",
+    explanation: "Great starter page structure with header/main/footer.",
+    create: () => [node("header"), node("main"), node("footer")]
+  },
+  {
+    id: "two-columns",
+    name: "Two Columns",
+    explanation: "A row with two side-by-side div areas.",
+    create: () => [
+      node("div", {
+        attrs: { class: "layout-two-col" },
+        children: [
+          node("div", { attrs: { class: "left-col" }, text: "" }),
+          node("div", { attrs: { class: "right-col" }, text: "" })
+        ]
+      })
+    ]
+  },
+  {
+    id: "article-sidebar",
+    name: "Article + Sidebar",
+    explanation: "Main article with an aside for side content.",
+    create: () => [node("main", { children: [node("article"), node("aside")] })]
+  },
+  {
+    id: "table-starter",
+    name: "Table Starter",
+    explanation: "Starter table with tbody > tr > td nesting.",
+    create: () => [
+      node("table", {
+        children: [
+          node("tbody", {
+            children: [node("tr", { children: [node("td", { text: "Cell" }), node("td", { text: "Cell" })] })]
+          })
+        ]
+      })
+    ]
+  }
 ];
 
 const SELF_CLOSING = new Set(["img", "input", "hr", "br"]);
+const CAN_HAVE_CHILDREN = new Set([
+  "div", "header", "nav", "main", "section", "article", "aside", "footer",
+  "ul", "ol", "li", "form", "table", "thead", "tbody", "tr"
+]);
 
-const palette = document.getElementById("palette");
+const ALLOWED_CHILDREN = {
+  table: ["thead", "tbody", "tr"],
+  thead: ["tr"],
+  tbody: ["tr"],
+  tr: ["th", "td"],
+  ul: ["li"],
+  ol: ["li"],
+  li: ["span", "strong", "em", "a", "br", "img", "button", "p", "div"],
+  form: ["label", "input", "button", "div", "p"],
+  label: ["span", "strong", "em"]
+};
+
+const layoutPalette = document.getElementById("layoutPalette");
+const elementPalette = document.getElementById("elementPalette");
 const dropZone = document.getElementById("dropZone");
 const codeOutput = document.getElementById("codeOutput");
 const previewFrame = document.getElementById("previewFrame");
@@ -65,294 +108,327 @@ const explanationBox = document.getElementById("explanationBox");
 const clearCanvas = document.getElementById("clearCanvas");
 const copyCode = document.getElementById("copyCode");
 
-const canvasItems = [];
-let draggedPaletteTag = null;
-let dragCanvasIndex = null;
+const rootNodes = [];
+let currentDrag = null;
 
-function createDefaults(tag) {
-  const text = `Sample ${tag} content`;
-  switch (tag) {
-    case "a":
-      return { attrs: { href: "https://example.com" }, text: "Visit example" };
-    case "img":
-      return { attrs: { src: "https://placehold.co/240x140", alt: "Placeholder image" }, text: "" };
-    case "video":
-      return { attrs: { controls: true, width: "220" }, text: "" };
-    case "audio":
-      return { attrs: { controls: true }, text: "" };
-    case "input":
-      return { attrs: { type: "text", placeholder: "Type here" }, text: "" };
-    case "option":
-      return { attrs: { value: "option-1" }, text: "Choice" };
-    case "progress":
-      return { attrs: { value: "45", max: "100" }, text: "45%" };
-    case "meter":
-      return { attrs: { value: "6", min: "0", max: "10" }, text: "6/10" };
-    case "br":
-    case "hr":
-      return { attrs: {}, text: "" };
-    default:
-      return { attrs: {}, text };
-  }
+function node(tag, options = {}) {
+  return {
+    id: `${tag}-${crypto.randomUUID().slice(0, 8)}`,
+    tag,
+    attrs: options.attrs || defaultAttrs(tag),
+    text: options.text ?? defaultText(tag),
+    children: options.children || []
+  };
 }
 
-function renderPalette() {
+function cloneNodes(nodes) {
+  return nodes.map((n) => ({ ...n, children: cloneNodes(n.children || []) }));
+}
+
+function defaultText(tag) {
+  const map = {
+    h1: "Big heading",
+    h2: "Section heading",
+    p: "Write your awesome text here!",
+    span: "small text",
+    strong: "important",
+    em: "emphasis",
+    li: "list item",
+    a: "Visit page",
+    button: "Click me",
+    label: "Your name",
+    td: "cell",
+    th: "heading"
+  };
+  return map[tag] || "";
+}
+
+function defaultAttrs(tag) {
+  if (tag === "a") return { href: "https://example.com" };
+  if (tag === "img") return { src: "https://placehold.co/200x120", alt: "Placeholder" };
+  if (tag === "input") return { type: "text", placeholder: "Type here" };
+  return {};
+}
+
+function describe(tag) {
+  return ELEMENT_LIBRARY.find((e) => e.tag === tag)?.explanation || "HTML element";
+}
+
+function canAcceptChild(parentTag, childTag) {
+  if (!CAN_HAVE_CHILDREN.has(parentTag)) return false;
+  const strict = ALLOWED_CHILDREN[parentTag];
+  if (!strict) return true;
+  return strict.includes(childTag);
+}
+
+function renderPalettes() {
+  LAYOUT_LIBRARY.forEach((layout) => {
+    const btn = document.createElement("button");
+    btn.className = "block layout-block";
+    btn.type = "button";
+    btn.draggable = true;
+    btn.textContent = layout.name;
+    btn.title = layout.explanation;
+    btn.addEventListener("mouseenter", () => showExplanation(layout.name, layout.explanation, "Layout"));
+    btn.addEventListener("dragstart", (event) => {
+      currentDrag = { kind: "layout", id: layout.id };
+      event.dataTransfer.setData("text/plain", JSON.stringify(currentDrag));
+    });
+    btn.addEventListener("click", () => addLayout(layout.id));
+    layoutPalette.appendChild(btn);
+  });
+
   ELEMENT_LIBRARY.forEach((entry) => {
-    const block = document.createElement("button");
-    block.className = "block";
-    block.draggable = true;
-    block.type = "button";
-    block.dataset.tag = entry.tag;
-    block.textContent = entry.label;
-    block.title = `${entry.category}: ${entry.explanation}`;
-
-    block.addEventListener("dragstart", (event) => {
-      draggedPaletteTag = entry.tag;
-      event.dataTransfer.effectAllowed = "copy";
-      event.dataTransfer.setData("text/plain", entry.tag);
+    const btn = document.createElement("button");
+    btn.className = "block";
+    btn.type = "button";
+    btn.draggable = true;
+    btn.textContent = entry.label;
+    btn.title = `${entry.category}: ${entry.explanation}`;
+    btn.addEventListener("mouseenter", () => showExplanation(entry.label, entry.explanation, entry.category));
+    btn.addEventListener("dragstart", (event) => {
+      currentDrag = { kind: "element", tag: entry.tag };
+      event.dataTransfer.setData("text/plain", JSON.stringify(currentDrag));
     });
-
-    block.addEventListener("mouseenter", () => showExplanation(entry));
-    block.addEventListener("focus", () => showExplanation(entry));
-
-    block.addEventListener("click", () => {
-      addCanvasItem(entry.tag);
-    });
-
-    palette.appendChild(block);
+    btn.addEventListener("click", () => addElementToRoot(entry.tag));
+    elementPalette.appendChild(btn);
   });
 }
 
-function showExplanation(entry) {
-  explanationBox.innerHTML = `
-    <h3>${entry.label} · ${entry.category}</h3>
-    <p>${entry.explanation} This element is useful for beginner projects and appears instantly in code + preview.</p>
+function showExplanation(title, explanation, category) {
+  explanationBox.innerHTML = `<h3>${title} · ${category}</h3><p>${explanation}</p>`;
+}
+
+function addLayout(layoutId) {
+  const layout = LAYOUT_LIBRARY.find((item) => item.id === layoutId);
+  if (!layout) return;
+  rootNodes.push(...cloneNodes(layout.create()));
+  renderCanvas();
+  refreshOutput();
+}
+
+function addElementToRoot(tag) {
+  rootNodes.push(node(tag));
+  renderCanvas();
+  refreshOutput();
+}
+
+function findNodeById(targetId, list = rootNodes, parent = null) {
+  for (let i = 0; i < list.length; i += 1) {
+    const item = list[i];
+    if (item.id === targetId) return { node: item, siblings: list, index: i, parent };
+    const found = findNodeById(targetId, item.children, item);
+    if (found) return found;
+  }
+  return null;
+}
+
+function removeNode(nodeId) {
+  const found = findNodeById(nodeId);
+  if (!found) return;
+  found.siblings.splice(found.index, 1);
+  renderCanvas();
+  refreshOutput();
+}
+
+function moveSibling(nodeId, direction) {
+  const found = findNodeById(nodeId);
+  if (!found) return;
+  const nextIndex = found.index + direction;
+  if (nextIndex < 0 || nextIndex >= found.siblings.length) return;
+  const [item] = found.siblings.splice(found.index, 1);
+  found.siblings.splice(nextIndex, 0, item);
+  renderCanvas();
+  refreshOutput();
+}
+
+function handleDropPayload(raw, targetChildren, parentTag = null) {
+  if (!raw) return;
+  let payload;
+  try {
+    payload = JSON.parse(raw);
+  } catch {
+    payload = currentDrag;
+  }
+
+  if (!payload) return;
+
+  if (payload.kind === "layout") {
+    const layout = LAYOUT_LIBRARY.find((item) => item.id === payload.id);
+    if (!layout) return;
+    if (parentTag) {
+      showExplanation("Layout blocked", "Layouts can only be dropped at the canvas root.", "Rule");
+      return;
+    }
+    targetChildren.push(...cloneNodes(layout.create()));
+  }
+
+  if (payload.kind === "element") {
+    if (parentTag && !canAcceptChild(parentTag, payload.tag)) {
+      showExplanation("Nesting rule", `<${payload.tag}> cannot go directly inside <${parentTag}>. Try a different parent.`, "Rule");
+      return;
+    }
+    targetChildren.push(node(payload.tag));
+  }
+
+  renderCanvas();
+  refreshOutput();
+}
+
+function makeDropArea(targetChildren, parentTag = null) {
+  const zone = document.createElement("div");
+  zone.className = "children-zone";
+
+  if (!targetChildren.length) {
+    const hint = document.createElement("p");
+    hint.className = "slot-hint";
+    hint.textContent = parentTag ? `Drop children inside <${parentTag}>` : "Drop a layout or element here";
+    zone.appendChild(hint);
+  }
+
+  zone.addEventListener("dragover", (event) => {
+    event.preventDefault();
+    zone.classList.add("drag-over");
+  });
+
+  zone.addEventListener("dragleave", () => {
+    zone.classList.remove("drag-over");
+  });
+
+  zone.addEventListener("drop", (event) => {
+    event.preventDefault();
+    zone.classList.remove("drag-over");
+    handleDropPayload(event.dataTransfer.getData("text/plain"), targetChildren, parentTag);
+  });
+
+  return zone;
+}
+
+function renderNode(nodeData, depth = 0) {
+  const card = document.createElement("article");
+  card.className = "canvas-node";
+  card.style.marginLeft = `${depth * 14}px`;
+
+  const header = document.createElement("div");
+  header.className = "canvas-header";
+
+  const title = document.createElement("p");
+  title.className = "canvas-title";
+  title.textContent = `<${nodeData.tag}>`;
+
+  const controls = document.createElement("div");
+  controls.className = "canvas-controls";
+  controls.innerHTML = `
+    <button class="icon-btn" data-action="up" title="Move up">↑</button>
+    <button class="icon-btn" data-action="down" title="Move down">↓</button>
+    <button class="icon-btn" data-action="delete" title="Delete">✕</button>
   `;
-}
 
-function addCanvasItem(tag, index = canvasItems.length) {
-  const libraryEntry = ELEMENT_LIBRARY.find((item) => item.tag === tag);
-  if (!libraryEntry) {
-    return;
+  controls.addEventListener("click", (event) => {
+    const action = event.target.dataset.action;
+    if (action === "delete") removeNode(nodeData.id);
+    if (action === "up") moveSibling(nodeData.id, -1);
+    if (action === "down") moveSibling(nodeData.id, 1);
+  });
+
+  title.addEventListener("mouseenter", () => showExplanation(`<${nodeData.tag}>`, describe(nodeData.tag), "Canvas"));
+
+  header.appendChild(title);
+  header.appendChild(controls);
+  card.appendChild(header);
+
+  if (CAN_HAVE_CHILDREN.has(nodeData.tag)) {
+    const childZone = makeDropArea(nodeData.children, nodeData.tag);
+    nodeData.children.forEach((child) => childZone.appendChild(renderNode(child, depth + 1)));
+    card.appendChild(childZone);
   }
 
-  const defaults = createDefaults(tag);
-  const item = {
-    id: `${tag}-${crypto.randomUUID().slice(0, 8)}`,
-    tag,
-    label: libraryEntry.label,
-    explanation: libraryEntry.explanation,
-    attrs: defaults.attrs,
-    text: defaults.text
-  };
-
-  canvasItems.splice(index, 0, item);
-  renderCanvas();
-  refreshOutput();
-}
-
-function removeCanvasItem(index) {
-  canvasItems.splice(index, 1);
-  renderCanvas();
-  refreshOutput();
-}
-
-function moveCanvasItem(from, to) {
-  if (from === to || to < 0 || to >= canvasItems.length) {
-    return;
-  }
-
-  const [moved] = canvasItems.splice(from, 1);
-  canvasItems.splice(to, 0, moved);
-  renderCanvas();
-  refreshOutput();
+  return card;
 }
 
 function renderCanvas() {
   dropZone.innerHTML = "";
 
-  if (!canvasItems.length) {
+  if (!rootNodes.length) {
     const empty = document.createElement("p");
     empty.className = "canvas-empty";
-    empty.textContent = "Drop HTML blocks here to build your page!";
+    empty.textContent = "Drop one of the 5 layout blocks here, then add elements into layout spaces!";
     dropZone.appendChild(empty);
-    return;
   }
 
-  canvasItems.forEach((item, index) => {
-    const card = document.createElement("article");
-    card.className = "canvas-item";
-    card.draggable = true;
-    card.dataset.index = String(index);
-
-    card.innerHTML = `
-      <div>
-        <p class="canvas-title">${item.label}</p>
-        <small>${item.explanation}</small>
-      </div>
-      <div class="canvas-controls">
-        <button class="icon-btn" data-action="up" title="Move up">↑</button>
-        <button class="icon-btn" data-action="down" title="Move down">↓</button>
-        <button class="icon-btn" data-action="delete" title="Delete">✕</button>
-      </div>
-    `;
-
-    card.addEventListener("dragstart", () => {
-      dragCanvasIndex = index;
-      card.classList.add("dragging");
-    });
-
-    card.addEventListener("dragend", () => {
-      dragCanvasIndex = null;
-      card.classList.remove("dragging");
-    });
-
-    card.addEventListener("dragover", (event) => {
-      event.preventDefault();
-      if (dragCanvasIndex !== null) {
-        event.dataTransfer.dropEffect = "move";
-      }
-    });
-
-    card.addEventListener("drop", (event) => {
-      event.preventDefault();
-      if (dragCanvasIndex !== null) {
-        moveCanvasItem(dragCanvasIndex, index);
-      }
-    });
-
-    card.addEventListener("click", (event) => {
-      const action = event.target.dataset.action;
-      if (action === "delete") {
-        removeCanvasItem(index);
-      } else if (action === "up") {
-        moveCanvasItem(index, index - 1);
-      } else if (action === "down") {
-        moveCanvasItem(index, index + 1);
-      } else {
-        showExplanation({ label: item.label, category: "Canvas", explanation: item.explanation });
-      }
-    });
-
-    dropZone.appendChild(card);
-  });
+  const rootDrop = makeDropArea(rootNodes);
+  rootNodes.forEach((nodeData) => rootDrop.appendChild(renderNode(nodeData)));
+  dropZone.appendChild(rootDrop);
 }
 
 function attrsToString(attrs) {
   return Object.entries(attrs)
-    .map(([key, value]) => {
-      if (value === true) {
-        return key;
-      }
-      return `${key}="${String(value).replaceAll('"', "&quot;")}"`;
-    })
+    .map(([key, value]) => (value === true ? key : `${key}="${String(value).replaceAll('"', "&quot;")}"`))
     .join(" ");
 }
 
-function generateHtmlCode() {
-  if (!canvasItems.length) {
-    return "<!-- Drag blocks into the canvas to generate HTML -->";
+function renderNodeHtml(nodeData, indent = 0) {
+  const pad = "  ".repeat(indent);
+  const attrs = attrsToString(nodeData.attrs);
+  const attrPart = attrs ? ` ${attrs}` : "";
+  const comment = `${pad}<!-- ${nodeData.tag} element -->`;
+
+  if (SELF_CLOSING.has(nodeData.tag)) {
+    return `${comment}\n${pad}<${nodeData.tag}${attrPart} />`;
   }
 
-  return canvasItems
-    .map((item) => {
-      const attrs = attrsToString(item.attrs);
-      const attrSegment = attrs ? ` ${attrs}` : "";
+  if (!nodeData.children.length) {
+    return `${comment}\n${pad}<${nodeData.tag}${attrPart}>${nodeData.text}</${nodeData.tag}>`;
+  }
 
-      if (SELF_CLOSING.has(item.tag)) {
-        return `<${item.tag}${attrSegment} />`;
-      }
+  const childrenHtml = nodeData.children.map((child) => renderNodeHtml(child, indent + 1)).join("\n");
+  return `${comment}\n${pad}<${nodeData.tag}${attrPart}>\n${childrenHtml}\n${pad}</${nodeData.tag}>`;
+}
 
-      return `<${item.tag}${attrSegment}>${item.text}</${item.tag}>`;
-    })
-    .join("\n");
+function generateHtmlCode() {
+  if (!rootNodes.length) return "<!-- Drag a layout block into the canvas to generate HTML -->";
+  return rootNodes.map((n) => renderNodeHtml(n)).join("\n");
 }
 
 function escapeHtml(raw) {
-  return raw
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;");
+  return raw.replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;");
 }
 
 function highlightHtml(html) {
   const safe = escapeHtml(html);
-  return safe.replace(/(&lt;\/?)([a-z0-9-]+)([^&]*?)(\/?&gt;)/gi, (match, open, tag, rest, close) => {
-    const tail = rest.trim() ? `<span class="token-text">${rest}</span>` : "";
-    return `<span class="token-angle">${open}</span><span class="token-tag">${tag}</span>${tail}<span class="token-angle">${close}</span>`;
-  });
+  return safe
+    .replace(/(&lt;!--.*?--&gt;)/g, '<span class="token-comment">$1</span>')
+    .replace(/(&lt;\/?)([a-z0-9-]+)([^&]*?)(\/?&gt;)/gi, (match, open, tag, rest, close) => {
+      const tail = rest.trim() ? `<span class="token-text">${rest}</span>` : "";
+      return `<span class="token-angle">${open}</span><span class="token-tag">${tag}</span>${tail}<span class="token-angle">${close}</span>`;
+    });
 }
 
 function refreshOutput() {
   const html = generateHtmlCode();
   codeOutput.innerHTML = highlightHtml(html);
-  previewFrame.srcdoc = `
-    <!doctype html>
-    <html>
-      <head>
-        <style>
-          body {
-            font-family: Arial, sans-serif;
-            padding: 12px;
-            line-height: 1.4;
-          }
-          img, video, iframe {
-            max-width: 100%;
-          }
-        </style>
-      </head>
-      <body>
-        ${html}
-      </body>
-    </html>
-  `;
-}
-
-function setupDropZone() {
-  dropZone.addEventListener("dragover", (event) => {
-    event.preventDefault();
-    dropZone.classList.add("drag-over");
-  });
-
-  dropZone.addEventListener("dragleave", () => {
-    dropZone.classList.remove("drag-over");
-  });
-
-  dropZone.addEventListener("drop", (event) => {
-    event.preventDefault();
-    dropZone.classList.remove("drag-over");
-
-    const droppedTag = event.dataTransfer.getData("text/plain") || draggedPaletteTag;
-    if (droppedTag) {
-      addCanvasItem(droppedTag);
-    }
-  });
+  previewFrame.srcdoc = `<!doctype html><html><body style="font-family:Arial,sans-serif;padding:12px;line-height:1.4;">${html}</body></html>`;
 }
 
 clearCanvas.addEventListener("click", () => {
-  canvasItems.length = 0;
+  rootNodes.length = 0;
   renderCanvas();
   refreshOutput();
 });
 
 copyCode.addEventListener("click", async () => {
   const html = generateHtmlCode();
-
   try {
     await navigator.clipboard.writeText(html);
     copyCode.textContent = "Copied!";
-    setTimeout(() => {
-      copyCode.textContent = "Copy HTML";
-    }, 1200);
   } catch {
     copyCode.textContent = "Copy blocked";
-    setTimeout(() => {
-      copyCode.textContent = "Copy HTML";
-    }, 1200);
   }
+  setTimeout(() => {
+    copyCode.textContent = "Copy HTML";
+  }, 1200);
 });
 
-renderPalette();
+renderPalettes();
 renderCanvas();
-setupDropZone();
 refreshOutput();

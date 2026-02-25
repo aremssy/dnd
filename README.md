@@ -4,17 +4,17 @@ A playful, kid-friendly drag-and-drop app for learning HTML inspired by Scratch/
 
 ## Features
 
-- Draggable HTML element blocks (wide element library)
-- Drop zone canvas to build layouts
+- **5 draggable layout starter blocks**
+- Draggable HTML element blocks dropped into layout spaces
+- Nested element support (e.g. `div > p`, `table > tr > td`, etc.)
 - Auto-generated HTML code with syntax highlighting
+- **Comment line before each generated element**
 - Live preview panel
 - Element explanations on hover/select
-- Reorder + delete elements on canvas
-- Candy-bright visual style (Fredoka font, teal/coral/amber palette, rounded cards, bouncy animations)
+- Reorder + delete nodes on canvas
+- Candy-bright visual style (Fredoka font, teal/coral/amber palette, rounded cards)
 
 ## Run locally
-
-Because this is a static app:
 
 ```bash
 python3 -m http.server 4173
