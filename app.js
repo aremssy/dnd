@@ -103,13 +103,34 @@ const layoutPalette = document.getElementById("layoutPalette");
 const elementPalette = document.getElementById("elementPalette");
 const dropZone = document.getElementById("dropZone");
 const codeOutput = document.getElementById("codeOutput");
+const codeEditor = document.getElementById("codeEditor");
+const codeViewWrap = document.getElementById("codeView");
+const codeEditWrap = document.getElementById("codeEdit");
+const showCodeViewBtn = document.getElementById("showCodeView");
+const showCodeEditBtn = document.getElementById("showCodeEdit");
 const previewFrame = document.getElementById("previewFrame");
 const explanationBox = document.getElementById("explanationBox");
 const clearCanvas = document.getElementById("clearCanvas");
 const copyCode = document.getElementById("copyCode");
+const showCanvasBtn = document.getElementById("showCanvas");
+const showRenderBtn = document.getElementById("showRender");
+const canvasView = document.getElementById("canvasView");
+const renderView = document.getElementById("renderView");
+// Style panel controls
+const styleColor = document.getElementById("styleColor");
+const styleBg = document.getElementById("styleBg");
+const stylePadding = document.getElementById("stylePadding");
+const styleMargin = document.getElementById("styleMargin");
+const styleFontSize = document.getElementById("styleFontSize");
+const clearStylesBtn = document.getElementById("clearStyles");
+const styleBorderWidth = document.getElementById("styleBorderWidth");
+const styleBorderStyle = document.getElementById("styleBorderStyle");
+const styleBorderColor = document.getElementById("styleBorderColor");
+const styleRaw = document.getElementById("styleRaw");
 
 const rootNodes = [];
 let currentDrag = null;
+let selectedNodeId = null;
 
 function node(tag, options = {}) {
   return {
@@ -174,7 +195,6 @@ function renderPalettes() {
       currentDrag = { kind: "layout", id: layout.id };
       event.dataTransfer.setData("text/plain", JSON.stringify(currentDrag));
     });
-    btn.addEventListener("click", () => addLayout(layout.id));
     layoutPalette.appendChild(btn);
   });
 
@@ -190,7 +210,7 @@ function renderPalettes() {
       currentDrag = { kind: "element", tag: entry.tag };
       event.dataTransfer.setData("text/plain", JSON.stringify(currentDrag));
     });
-    btn.addEventListener("click", () => addElementToRoot(entry.tag));
+    // Click-to-add disabled for elements; drag only
     elementPalette.appendChild(btn);
   });
 }
@@ -253,6 +273,18 @@ function handleDropPayload(raw, targetChildren, parentTag = null) {
 
   if (!payload) return;
 
+  if (payload.kind === "move") {
+    const moving = findNodeById(payload.id);
+    if (!moving) return;
+    if (parentTag && !canAcceptChild(parentTag, moving.node.tag)) return;
+    // Prevent moving a node into itself or its subtree
+    if (moving.node.id === payload.targetId) return;
+    // Remove from old position
+    const [item] = moving.siblings.splice(moving.index, 1);
+    // Append to target list
+    targetChildren.push(item);
+  }
+
   if (payload.kind === "layout") {
     const layout = LAYOUT_LIBRARY.find((item) => item.id === payload.id);
     if (!layout) return;
@@ -278,17 +310,19 @@ function handleDropPayload(raw, targetChildren, parentTag = null) {
 function makeDropArea(targetChildren, parentTag = null) {
   const zone = document.createElement("div");
   zone.className = "children-zone";
+  if (!parentTag) zone.classList.add("root-drop");
 
   if (!targetChildren.length) {
     const hint = document.createElement("p");
     hint.className = "slot-hint";
-    hint.textContent = parentTag ? `Drop children inside <${parentTag}>` : "Drop a layout or element here";
+    hint.textContent = parentTag ? `Drop children inside <${parentTag}>` : "Drop a layout or element anywhere in the canvas";
     zone.appendChild(hint);
   }
 
   zone.addEventListener("dragover", (event) => {
     event.preventDefault();
     zone.classList.add("drag-over");
+    event.stopPropagation();
   });
 
   zone.addEventListener("dragleave", () => {
@@ -298,6 +332,7 @@ function makeDropArea(targetChildren, parentTag = null) {
   zone.addEventListener("drop", (event) => {
     event.preventDefault();
     zone.classList.remove("drag-over");
+    event.stopPropagation();
     handleDropPayload(event.dataTransfer.getData("text/plain"), targetChildren, parentTag);
   });
 
@@ -308,6 +343,9 @@ function renderNode(nodeData, depth = 0) {
   const card = document.createElement("article");
   card.className = "canvas-node";
   card.style.marginLeft = `${depth * 14}px`;
+  if (nodeData.id === selectedNodeId) {
+    card.classList.add("selected");
+  }
 
   const header = document.createElement("div");
   header.className = "canvas-header";
@@ -332,10 +370,85 @@ function renderNode(nodeData, depth = 0) {
   });
 
   title.addEventListener("mouseenter", () => showExplanation(`<${nodeData.tag}>`, describe(nodeData.tag), "Canvas"));
+  card.addEventListener("click", (e) => {
+    e.stopPropagation();
+    selectedNodeId = nodeData.id;
+    renderCanvas();
+    refreshOutput();
+    updateStylePanel();
+  });
+
+  // Drag handle for moving this node among siblings (keeps children)
+  header.draggable = true;
+  header.addEventListener("dragstart", (event) => {
+    currentDrag = { kind: "move", id: nodeData.id };
+    event.dataTransfer.setData("text/plain", JSON.stringify(currentDrag));
+    event.stopPropagation();
+  });
+  header.addEventListener("click", (e) => {
+    e.stopPropagation();
+    selectedNodeId = nodeData.id;
+    renderCanvas();
+    refreshOutput();
+    updateStylePanel();
+  });
+
+  // Allow dropping another node before this one (sibling reorder)
+  card.addEventListener("dragover", (event) => {
+    // Only for move operations
+    if (!currentDrag || currentDrag.kind !== "move") return;
+    event.preventDefault();
+  });
+  card.addEventListener("drop", (event) => {
+    const raw = event.dataTransfer.getData("text/plain");
+    let payload;
+    try { payload = JSON.parse(raw); } catch { payload = currentDrag; }
+    if (!payload || payload.kind !== "move") return;
+    event.preventDefault();
+    event.stopPropagation();
+    const moving = findNodeById(payload.id);
+    const target = findNodeById(nodeData.id);
+    if (!moving || !target) return;
+    // Prevent self-drop
+    if (moving.node.id === target.node.id) return;
+    // Remove from old position
+    const [item] = moving.siblings.splice(moving.index, 1);
+    // Insert before target in same siblings list
+    const where = target.siblings === moving.siblings ? target.index : target.index;
+    target.siblings.splice(where, 0, item);
+    renderCanvas();
+    refreshOutput();
+  });
 
   header.appendChild(title);
   header.appendChild(controls);
   card.appendChild(header);
+
+  // Inline text editing for leaf nodes
+  if (!SELF_CLOSING.has(nodeData.tag) && nodeData.children.length === 0) {
+    const textBox = document.createElement("div");
+    textBox.className = "text-editor";
+    textBox.contentEditable = "true";
+    textBox.textContent = nodeData.text || "";
+    // Avoid starting a drag while editing
+    textBox.addEventListener("mousedown", (e) => e.stopPropagation());
+    textBox.addEventListener("click", (e) => {
+      e.stopPropagation();
+    });
+    textBox.addEventListener("focus", () => {
+      // Update selection without re-render to keep caret
+      selectedNodeId = nodeData.id;
+      const prev = document.querySelectorAll(".canvas-node.selected");
+      prev.forEach((el) => el.classList.remove("selected"));
+      card.classList.add("selected");
+      updateStylePanel();
+    });
+    textBox.addEventListener("input", () => {
+      nodeData.text = textBox.textContent;
+      refreshOutput();
+    });
+    card.appendChild(textBox);
+  }
 
   if (CAN_HAVE_CHILDREN.has(nodeData.tag)) {
     const childZone = makeDropArea(nodeData.children, nodeData.tag);
@@ -359,6 +472,18 @@ function renderCanvas() {
   const rootDrop = makeDropArea(rootNodes);
   rootNodes.forEach((nodeData) => rootDrop.appendChild(renderNode(nodeData)));
   dropZone.appendChild(rootDrop);
+  if (selectedNodeId) {
+    const selected = dropZone.querySelector(".canvas-node.selected .text-editor");
+    if (selected) {
+      selected.focus();
+      const r = document.createRange();
+      r.selectNodeContents(selected);
+      r.collapse(false);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }
+  }
 }
 
 function attrsToString(attrs) {
@@ -406,8 +531,97 @@ function highlightHtml(html) {
 
 function refreshOutput() {
   const html = generateHtmlCode();
-  codeOutput.innerHTML = highlightHtml(html);
-  previewFrame.srcdoc = `<!doctype html><html><body style="font-family:Arial,sans-serif;padding:12px;line-height:1.4;">${html}</body></html>`;
+  if (codeOutput) codeOutput.innerHTML = highlightHtml(html);
+  if (codeEditor && !codeEditWrap.hidden) codeEditor.value = html;
+  if (previewFrame) {
+    previewFrame.srcdoc = `<!doctype html><html><body style="font-family:Arial,sans-serif;padding:12px;line-height:1.4;">${html}</body></html>`;
+  }
+}
+
+function buildNodeFromEl(el) {
+  const tag = el.tagName.toLowerCase();
+  const attrs = {};
+  for (const a of el.attributes) {
+    attrs[a.name] = a.value;
+  }
+  const elementChildren = Array.from(el.childNodes).filter((n) => n.nodeType === 1);
+  const textNodes = Array.from(el.childNodes).filter((n) => n.nodeType === 3 && n.textContent.trim().length);
+  const children = elementChildren.map((child) => buildNodeFromEl(child));
+  const text = children.length ? "" : (textNodes.map((n) => n.textContent).join("").trim() || defaultText(tag));
+  return {
+    id: `${tag}-${crypto.randomUUID().slice(0, 8)}`,
+    tag,
+    attrs,
+    text,
+    children
+  };
+}
+
+function parseHtmlToNodes(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
+  const body = doc.body;
+  const elements = Array.from(body.childNodes).filter((n) => n.nodeType === 1);
+  return elements.map((el) => buildNodeFromEl(el));
+}
+
+function debounce(fn, wait = 300) {
+  let t;
+  return (...args) => {
+    clearTimeout(t);
+    t = setTimeout(() => fn(...args), wait);
+  };
+}
+
+function parseInlineStyle(styleStr = "") {
+  return styleStr.split(";").map(s => s.trim()).filter(Boolean).reduce((acc, pair) => {
+    const idx = pair.indexOf(":");
+    if (idx > -1) {
+      const key = pair.slice(0, idx).trim();
+      const value = pair.slice(idx + 1).trim();
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+}
+
+function styleToString(obj) {
+  return Object.entries(obj).map(([k, v]) => `${k}: ${v}`).join("; ");
+}
+
+function updateStylePanel() {
+  if (!selectedNodeId) return;
+  const found = findNodeById(selectedNodeId);
+  if (!found) return;
+  const styles = parseInlineStyle(found.node.attrs.style || "");
+  if (styleColor) styleColor.value = styles.color ? rgbOrHex(styles.color) : "#000000";
+  if (styleBg) styleBg.value = styles["background"] || styles["background-color"] ? rgbOrHex(styles["background"] || styles["background-color"]) : "#ffffff";
+  if (styleFontSize) styleFontSize.value = styles["font-size"] || "";
+  if (stylePadding) stylePadding.value = styles.padding || "";
+  if (styleMargin) styleMargin.value = styles.margin || "";
+  if (styleBorderWidth) styleBorderWidth.value = styles["border-width"] || "";
+  if (styleBorderStyle) styleBorderStyle.value = styles["border-style"] || "";
+  if (styleBorderColor) styleBorderColor.value = styles["border-color"] ? rgbOrHex(styles["border-color"]) : "#000000";
+  if (styleRaw) styleRaw.value = found.node.attrs.style || "";
+}
+
+function rgbOrHex(v) {
+  // Best effort: browsers may return rgb(), keep as is if not hex-compatible
+  return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v) ? v : v;
+}
+
+function setStyleOnSelected(prop, value) {
+  if (!selectedNodeId) {
+    showExplanation("No element selected", "Click a canvas card to apply styles.", "Styles");
+    return;
+  }
+  const found = findNodeById(selectedNodeId);
+  if (!found) return;
+  const styles = parseInlineStyle(found.node.attrs.style || "");
+  if (value) styles[prop] = value;
+  else delete styles[prop];
+  found.node.attrs.style = styleToString(styles);
+  refreshOutput();
 }
 
 clearCanvas.addEventListener("click", () => {
@@ -428,6 +642,99 @@ copyCode.addEventListener("click", async () => {
     copyCode.textContent = "Copy HTML";
   }, 1200);
 });
+
+// View toggle handlers
+if (showCanvasBtn && showRenderBtn && canvasView && renderView) {
+  const activate = (which) => {
+    const isCanvas = which === "canvas";
+    showCanvasBtn.classList.toggle("active", isCanvas);
+    showRenderBtn.classList.toggle("active", !isCanvas);
+    canvasView.hidden = !isCanvas;
+    renderView.hidden = isCanvas;
+    if (!isCanvas) refreshOutput();
+  };
+  showCanvasBtn.addEventListener("click", () => activate("canvas"));
+  showRenderBtn.addEventListener("click", () => activate("render"));
+}
+
+if (showCodeViewBtn && showCodeEditBtn && codeViewWrap && codeEditWrap) {
+  const activate = (mode) => {
+    const isView = mode === "view";
+    showCodeViewBtn.classList.toggle("active", isView);
+    showCodeEditBtn.classList.toggle("active", !isView);
+    codeViewWrap.hidden = !isView;
+    codeEditWrap.hidden = isView;
+    if (isView) {
+      refreshOutput();
+    } else if (codeEditor) {
+      codeEditor.value = generateHtmlCode();
+    }
+  };
+  showCodeViewBtn.addEventListener("click", () => activate("view"));
+  showCodeEditBtn.addEventListener("click", () => activate("edit"));
+}
+
+if (codeEditor) {
+  const syncFromEditor = debounce(() => {
+    try {
+      const nodes = parseHtmlToNodes(codeEditor.value || "");
+      rootNodes.length = 0;
+      nodes.forEach((n) => rootNodes.push(n));
+      renderCanvas();
+      refreshOutput();
+    } catch {
+      /* ignore parse errors while typing */
+    }
+  }, 300);
+  codeEditor.addEventListener("input", syncFromEditor);
+  codeEditor.addEventListener("blur", syncFromEditor);
+}
+
+// Styles panel interactions
+if (clearStylesBtn) {
+  clearStylesBtn.addEventListener("click", () => {
+    if (!selectedNodeId) return;
+    const found = findNodeById(selectedNodeId);
+    if (!found) return;
+    delete found.node.attrs.style;
+    updateStylePanel();
+    refreshOutput();
+  });
+}
+if (styleColor) {
+  styleColor.addEventListener("input", () => setStyleOnSelected("color", styleColor.value));
+  styleColor.addEventListener("change", () => styleColor.blur());
+}
+if (styleBg) {
+  styleBg.addEventListener("input", () => setStyleOnSelected("background-color", styleBg.value));
+  styleBg.addEventListener("change", () => styleBg.blur());
+}
+if (styleFontSize) styleFontSize.addEventListener("input", () => setStyleOnSelected("font-size", styleFontSize.value));
+if (stylePadding) stylePadding.addEventListener("input", () => setStyleOnSelected("padding", stylePadding.value));
+if (styleMargin) styleMargin.addEventListener("input", () => setStyleOnSelected("margin", styleMargin.value));
+  if (styleBorderWidth) styleBorderWidth.addEventListener("input", () => setStyleOnSelected("border-width", styleBorderWidth.value));
+  if (styleBorderStyle) styleBorderStyle.addEventListener("change", () => setStyleOnSelected("border-style", styleBorderStyle.value));
+  if (styleBorderColor) {
+    styleBorderColor.addEventListener("input", () => setStyleOnSelected("border-color", styleBorderColor.value));
+    styleBorderColor.addEventListener("change", () => styleBorderColor.blur());
+  }
+  if (styleRaw) {
+    const syncRaw = debounce(() => {
+      if (!selectedNodeId) return;
+      const found = findNodeById(selectedNodeId);
+      if (!found) return;
+      const raw = styleRaw.value || "";
+      found.node.attrs.style = raw;
+      refreshOutput();
+    }, 200);
+    styleRaw.addEventListener("input", syncRaw);
+    styleRaw.addEventListener("blur", syncRaw);
+  }
+  document.addEventListener("click", (e) => {
+    if (e.target !== styleColor) styleColor && styleColor.blur();
+    if (e.target !== styleBg) styleBg && styleBg.blur();
+    if (e.target !== styleBorderColor) styleBorderColor && styleBorderColor.blur();
+  });
 
 renderPalettes();
 renderCanvas();

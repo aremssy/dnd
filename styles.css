@@ -42,10 +42,95 @@ body {
 
 .workspace {
   display: grid;
-  grid-template-columns: 1.1fr 1fr 1.3fr;
+  grid-template-columns: 20% 70% 10%;
+  grid-template-rows: 1fr auto;
+  grid-template-areas:
+    "palette preview style"
+    "code code code";
   gap: 1rem;
   min-height: calc(100vh - 110px);
   padding: 1rem;
+}
+
+.palette-panel { grid-area: palette; }
+.canvas-panel { grid-area: preview; }
+.output-panel { grid-area: code; }
+.style-panel { grid-area: style; }
+
+/* Toggle group */
+.toggle-group {
+  display: inline-flex;
+  background: #f0f3ff;
+  border-radius: 999px;
+  padding: 2px;
+  gap: 2px;
+}
+.seg-btn {
+  border: none;
+  background: transparent;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  color: #3e4775;
+}
+.seg-btn.active { background: white; box-shadow: 0 2px 8px rgba(45,58,92,0.15); }
+
+/* Views in the canvas panel */
+.canvas-views { flex: 1; display: flex; min-height: 0; }
+.canvas-view, .render-view { flex: 1; display: flex; min-height: 0; }
+[hidden] { display: none !important; }
+
+/* Inline text editor inside node cards */
+.text-editor {
+  border: 2px dashed rgba(93, 99, 255, 0.2);
+  border-radius: 10px;
+  padding: 6px 8px;
+  min-height: 28px;
+  outline: none;
+  background: #fbfcff;
+}
+.canvas-node.selected {
+  border-color: var(--blueberry);
+  box-shadow: 0 0 0 3px rgba(93, 99, 255, 0.22);
+  background: linear-gradient(180deg, #ffffff, #f3f6ff);
+}
+
+/* Styles panel */
+.style-form {
+  display: grid;
+  gap: 0.4rem;
+}
+.style-field {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 0.2rem;
+  font-size: 0.85rem;
+}
+.style-field input[type="text"] {
+  padding: 0.35rem 0.5rem;
+  border-radius: 10px;
+  border: 2px solid rgba(93, 99, 255, 0.2);
+  font: inherit;
+  width: auto;
+  max-width: 110px;
+}
+.style-field select {
+  padding: 0.35rem 0.5rem;
+  border-radius: 10px;
+  border: 2px solid rgba(93, 99, 255, 0.2);
+  font: inherit;
+  width: auto;
+  max-width: 120px;
+}
+.style-field textarea {
+  padding: 0.35rem 0.5rem;
+  border-radius: 10px;
+  border: 2px solid rgba(93, 99, 255, 0.2);
+  font: inherit;
+  min-height: 84px;
+  resize: vertical;
 }
 
 .panel {
@@ -136,10 +221,10 @@ body {
     radial-gradient(circle at 20% 15%, rgba(255, 202, 58, 0.16), transparent 35%),
     radial-gradient(circle at 80% 85%, rgba(20, 217, 201, 0.12), transparent 40%),
     #fbfdff;
-  padding: 0.75rem;
+  padding: 0.5rem;
   display: flex;
   flex-direction: column;
-  gap: 0.6rem;
+  gap: 0.4rem;
 }
 
 .drop-zone.drag-over {
@@ -158,7 +243,7 @@ body {
   background: #fff;
   border-radius: var(--radius-md);
   border: 2px solid rgba(20, 217, 201, 0.24);
-  padding: 0.65rem;
+  padding: 0.4rem;
   display: grid;
   gap: 0.5rem;
 }
@@ -180,11 +265,15 @@ body {
 .children-zone {
   border: 2px dashed rgba(93, 99, 255, 0.25);
   border-radius: 12px;
-  padding: 0.5rem;
-  min-height: 58px;
+  padding: 0.4rem;
+  min-height: 40px;
   background: #fbfcff;
   display: grid;
   gap: 0.5rem;
+}
+/* Root drop should fill available space to make entire canvas droppable */
+.children-zone.root-drop {
+  min-height: 100%;
 }
 
 .children-zone.drag-over {
@@ -216,7 +305,7 @@ body {
 .output-grid {
   flex: 1;
   display: grid;
-  grid-template-rows: 1fr 1fr;
+  grid-template-rows: 1fr;
   gap: 0.75rem;
   min-height: 0;
 }
@@ -246,6 +335,15 @@ body {
   font-family: "Fira Code", "Cascadia Mono", monospace;
   font-size: 0.84rem;
 }
+.code-editor {
+  width: 100%;
+  height: 100%;
+  resize: vertical;
+  box-sizing: border-box;
+  border: 2px solid rgba(93, 99, 255, 0.2);
+  background: #0f1220;
+  color: #e9ecff;
+}
 
 .token-tag { color: #ff8fab; }
 .token-angle { color: #87e6ff; }
@@ -261,6 +359,15 @@ iframe {
 }
 
 @media (max-width: 1120px) {
-  .workspace { grid-template-columns: 1fr; min-height: auto; }
+  .workspace {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+      "palette"
+      "preview"
+      "style"
+      "code";
+    min-height: auto;
+  }
   .panel { min-height: 450px; }
 }
