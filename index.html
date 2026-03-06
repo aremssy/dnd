@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>HTML Candy Builder</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="app-header">
+      <h1>🍬 HTML Candy Builder</h1>
+      <p>Drag layouts + HTML blocks, nest elements, and watch code and preview update instantly.</p>
+    </header>
+
+    <main class="workspace">
+      <section class="panel palette-panel">
+        <div class="panel-title-wrap">
+          <h2>🏗️ Layout Blocks</h2>
+          <span class="chip">Start here!</span>
+        </div>
+        <p class="panel-help">Drag one of 5 layout starters to the canvas.</p>
+        <div id="layoutPalette" class="palette-grid"></div>
+
+        <div class="panel-title-wrap subheading">
+          <h2>✨ HTML Elements</h2>
+        </div>
+        <p class="panel-help">Then drag elements into any glowing drop slot.</p>
+        <div id="elementPalette" class="palette-grid"></div>
+
+        <div class="explanation-box" id="explanationBox">
+          <h3>Element Explorer</h3>
+          <p>Hover a block or canvas card to learn what it does.</p>
+        </div>
+      </section>
+
+      <section class="panel canvas-panel" id="canvasPanel">
+        <div class="panel-title-wrap">
+          <h2>🧩 Workspace</h2>
+          <div class="toggle-group" role="tablist" aria-label="View toggle">
+            <button id="showCanvas" class="seg-btn active" role="tab" aria-selected="true">Canvas</button>
+            <button id="showRender" class="seg-btn" role="tab" aria-selected="false">Preview</button>
+          </div>
+          <button id="clearCanvas" class="ghost-btn">Clear all</button>
+        </div>
+        <p class="panel-help">Drop layout blocks anywhere, then nest elements into layout spaces.</p>
+        <div class="canvas-views">
+          <div id="canvasView" class="canvas-view" aria-labelledby="showCanvas">
+            <div id="dropZone" class="drop-zone" aria-label="Drop zone"></div>
+          </div>
+          <div id="renderView" class="render-view" aria-labelledby="showRender" hidden>
+            <iframe id="previewFrame" title="Live HTML preview"></iframe>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel output-panel">
+        <div class="panel-title-wrap">
+          <h2>💡 Code</h2>
+          <div class="toggle-group" role="tablist" aria-label="Code toggle">
+            <button id="showCodeView" class="seg-btn active" role="tab" aria-selected="true">View</button>
+            <button id="showCodeEdit" class="seg-btn" role="tab" aria-selected="false">Edit</button>
+          </div>
+          <button id="copyCode" class="primary-btn">Copy HTML</button>
+        </div>
+        <div class="output-grid">
+          <article class="code-card">
+            <h3>Auto-generated HTML</h3>
+            <div id="codeView">
+              <pre id="codeOutput" class="code-output" aria-live="polite"></pre>
+            </div>
+            <div id="codeEdit" hidden>
+              <textarea id="codeEditor" class="code-output code-editor" spellcheck="false" aria-label="Edit HTML"></textarea>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section class="panel style-panel" id="stylePanel">
+        <div class="panel-title-wrap">
+          <h2>🎨 Styles</h2>
+          <button id="clearStyles" class="ghost-btn">Clear</button>
+        </div>
+        <p class="panel-help">Select an element on the canvas to edit its styles.</p>
+        <form class="style-form" onsubmit="return false;">
+          <label class="style-field">
+            <span>Color</span>
+            <input type="color" id="styleColor" />
+          </label>
+          <label class="style-field">
+            <span>Background</span>
+            <input type="color" id="styleBg" />
+          </label>
+          <label class="style-field">
+            <span>Font size</span>
+            <input type="text" id="styleFontSize" placeholder="16px" size="8" />
+          </label>
+          <label class="style-field">
+            <span>Padding</span>
+            <input type="text" id="stylePadding" placeholder="12px 16px" size="10" />
+          </label>
+          <label class="style-field">
+            <span>Margin</span>
+            <input type="text" id="styleMargin" placeholder="8px 0" size="10" />
+          </label>
+          <label class="style-field">
+            <span>Border width</span>
+            <input type="text" id="styleBorderWidth" placeholder="1px" size="6" />
+          </label>
+          <label class="style-field">
+            <span>Border style</span>
+            <select id="styleBorderStyle">
+              <option value="">(none)</option>
+              <option>solid</option>
+              <option>dashed</option>
+              <option>dotted</option>
+              <option>double</option>
+            </select>
+          </label>
+          <label class="style-field">
+            <span>Border color</span>
+            <input type="color" id="styleBorderColor" />
+          </label>
+          <label class="style-field">
+            <span>Custom CSS</span>
+            <textarea id="styleRaw" rows="5" placeholder="e.g. line-height:1.4; letter-spacing:0.2px;"></textarea>
+          </label>
+        </form>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
